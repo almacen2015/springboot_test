@@ -17,106 +17,107 @@ import test.springboot_test.repositories.BancoRepository;
 import test.springboot_test.repositories.CuentaRepository;
 import test.springboot_test.services.CuentaService;
 import test.springboot_test.services.CuentaServiceImpl;
+
 import static test.springboot_test.Datos.*;
 
 @SpringBootTest
 class SpringbootTestApplicationTests {
 
-	CuentaRepository cuentaRepository;
-	BancoRepository bancoRepository;
+    CuentaRepository cuentaRepository;
+    BancoRepository bancoRepository;
 
-	CuentaService service;
+    CuentaService service;
 
-	@BeforeEach
-	void setUp() {
-		cuentaRepository = mock(CuentaRepository.class);
-		bancoRepository = mock(BancoRepository.class);
-		service = new CuentaServiceImpl(cuentaRepository, bancoRepository);
+    @BeforeEach
+    void setUp() {
+        cuentaRepository = mock(CuentaRepository.class);
+        bancoRepository = mock(BancoRepository.class);
+        service = new CuentaServiceImpl(cuentaRepository, bancoRepository);
 	/*	Datos.CUENTA_001.setSaldo(new BigDecimal("5000"));
 		Datos.CUENTA_002.setSaldo(new BigDecimal("2000"));
 		Datos.BANCO.setTotalTransferencias(0);*/
-	}
+    }
 
-	@Test
-	void contextLoads() {
-		when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
-		when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
-		when(bancoRepository.findById(1L)).thenReturn(crearBanco());
+    @Test
+    void contextLoads() {
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
+        when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
+        when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
-		BigDecimal saldoOrigen = service.revisarSaldo(1L);
-		BigDecimal saldoDestino = service.revisarSaldo(2L);
+        BigDecimal saldoOrigen = service.revisarSaldo(1L);
+        BigDecimal saldoDestino = service.revisarSaldo(2L);
 
-		assertEquals("5000", saldoOrigen.toPlainString());
-		assertEquals("2000", saldoDestino.toPlainString());
+        assertEquals("5000", saldoOrigen.toPlainString());
+        assertEquals("2000", saldoDestino.toPlainString());
 
-		service.transferir(1L, 2L, new BigDecimal("100"), 1L);
-		saldoOrigen = service.revisarSaldo(1L);
-		saldoDestino = service.revisarSaldo(2L);
-		int totalTransferencias = service.revisarTotalTransferencia(1L);
+        service.transferir(1L, 2L, new BigDecimal("100"), 1L);
+        saldoOrigen = service.revisarSaldo(1L);
+        saldoDestino = service.revisarSaldo(2L);
+        int totalTransferencias = service.revisarTotalTransferencia(1L);
 
-		assertEquals(1, totalTransferencias);
+        assertEquals(1, totalTransferencias);
 
-		assertEquals("4900", saldoOrigen.toPlainString());
-		assertEquals("2100", saldoDestino.toPlainString());
+        assertEquals("4900", saldoOrigen.toPlainString());
+        assertEquals("2100", saldoDestino.toPlainString());
 
-		verify(cuentaRepository, times(3)).findById(1L);
-		verify(cuentaRepository, times(3)).findById(2L);
-		verify(cuentaRepository, times(2)).update(any(Cuenta.class));
+        verify(cuentaRepository, times(3)).findById(1L);
+        verify(cuentaRepository, times(3)).findById(2L);
+        verify(cuentaRepository, times(2)).update(any(Cuenta.class));
 
-		verify(bancoRepository, times(2)).findById(1L);
-		verify(bancoRepository).update(any(Banco.class));
+        verify(bancoRepository, times(2)).findById(1L);
+        verify(bancoRepository).update(any(Banco.class));
 
-		verify(cuentaRepository, times(6)).findById(anyLong());
-		verify(cuentaRepository, never()).findAll();
+        verify(cuentaRepository, times(6)).findById(anyLong());
+        verify(cuentaRepository, never()).findAll();
 
-	}
+    }
 
-	@Test
-	void contextLoads2() {
-		when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
-		when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
-		when(bancoRepository.findById(1L)).thenReturn(crearBanco());
+    @Test
+    void contextLoads2() {
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
+        when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
+        when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
-		BigDecimal saldoOrigen = service.revisarSaldo(1L);
-		BigDecimal saldoDestino = service.revisarSaldo(2L);
+        BigDecimal saldoOrigen = service.revisarSaldo(1L);
+        BigDecimal saldoDestino = service.revisarSaldo(2L);
 
-		assertEquals("5000", saldoOrigen.toPlainString());
-		assertEquals("2000", saldoDestino.toPlainString());
+        assertEquals("5000", saldoOrigen.toPlainString());
+        assertEquals("2000", saldoDestino.toPlainString());
 
-		assertThrows(DineroInsuficienteException.class, () -> {
-			service.transferir(1L, 2L, new BigDecimal("6000"), 1L);
-		});
-		
-		saldoOrigen = service.revisarSaldo(1L);
-		saldoDestino = service.revisarSaldo(2L);
-		int totalTransferencias = service.revisarTotalTransferencia(1L);
+        assertThrows(DineroInsuficienteException.class, () -> {
+            service.transferir(1L, 2L, new BigDecimal("6000"), 1L);
+        });
 
-		assertEquals(0, totalTransferencias);
+        saldoOrigen = service.revisarSaldo(1L);
+        saldoDestino = service.revisarSaldo(2L);
+        int totalTransferencias = service.revisarTotalTransferencia(1L);
 
-		assertEquals("5000", saldoOrigen.toPlainString());
-		assertEquals("2000", saldoDestino.toPlainString());
+        assertEquals(0, totalTransferencias);
 
-		verify(cuentaRepository, times(3)).findById(1L);
-		verify(cuentaRepository, times(2)).findById(2L);
-		verify(cuentaRepository, never()).update(any(Cuenta.class));
+        assertEquals("5000", saldoOrigen.toPlainString());
+        assertEquals("2000", saldoDestino.toPlainString());
 
-		verify(bancoRepository, times(1)).findById(1L);
-		verify(bancoRepository, never()).update(any(Banco.class));
+        verify(cuentaRepository, times(3)).findById(1L);
+        verify(cuentaRepository, times(2)).findById(2L);
+        verify(cuentaRepository, never()).update(any(Cuenta.class));
 
-		verify(cuentaRepository, times(5)).findById(anyLong());
-		verify(cuentaRepository, never()).findAll();
+        verify(bancoRepository, times(1)).findById(1L);
+        verify(bancoRepository, never()).update(any(Banco.class));
 
-	}
+        verify(cuentaRepository, times(5)).findById(anyLong());
+        verify(cuentaRepository, never()).findAll();
 
-	@Test
-	void contextLoads3() {
-		when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
-		Cuenta cuenta1 = service.findById(1L);
-		Cuenta cuenta2 = service.findById(1L);
+    }
 
-		assertSame(cuenta1,cuenta2);
-	}
+    @Test
+    void contextLoads3() {
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
+        Cuenta cuenta1 = service.findById(1L);
+        Cuenta cuenta2 = service.findById(1L);
 
-	
-
+        assertSame(cuenta1, cuenta2);
+        assertEquals("VICTOR", cuenta1.getPersona());
+        assertEquals("VICTOR", cuenta2.getPersona());
+        verify(cuentaRepository, times(2)).findById(1L);
+    }
 }
