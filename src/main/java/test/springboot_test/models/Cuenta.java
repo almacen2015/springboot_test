@@ -4,7 +4,13 @@ import java.math.BigDecimal;
 
 import test.springboot_test.exceptions.DineroInsuficienteException;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "cuentas")
 public class Cuenta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String persona;
     private BigDecimal saldo;

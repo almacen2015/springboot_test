@@ -8,8 +8,12 @@ import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
 import test.springboot_test.exceptions.DineroInsuficienteException;
 import test.springboot_test.models.Banco;
 import test.springboot_test.models.Cuenta;
@@ -23,16 +27,20 @@ import static test.springboot_test.Datos.*;
 @SpringBootTest
 class SpringbootTestApplicationTests {
 
+    @MockBean
     CuentaRepository cuentaRepository;
+
+    @MockBean
     BancoRepository bancoRepository;
 
-    CuentaService service;
+    @Autowired
+    CuentaServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        cuentaRepository = mock(CuentaRepository.class);
-        bancoRepository = mock(BancoRepository.class);
-        service = new CuentaServiceImpl(cuentaRepository, bancoRepository);
+//        cuentaRepository = mock(CuentaRepository.class);
+//        bancoRepository = mock(BancoRepository.class);
+//        service = new CuentaServiceImpl(cuentaRepository, bancoRepository);
 	/*	Datos.CUENTA_001.setSaldo(new BigDecimal("5000"));
 		Datos.CUENTA_002.setSaldo(new BigDecimal("2000"));
 		Datos.BANCO.setTotalTransferencias(0);*/
