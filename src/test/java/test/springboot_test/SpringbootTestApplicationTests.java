@@ -28,13 +28,13 @@ import static test.springboot_test.Datos.*;
 class SpringbootTestApplicationTests {
 
     @MockBean
-    CuentaRepository cuentaRepository;
+    private CuentaRepository cuentaRepository;
 
     @MockBean
-    BancoRepository bancoRepository;
+    private BancoRepository bancoRepository;
 
     @Autowired
-    CuentaServiceImpl service;
+    private CuentaService service;
 
     @BeforeEach
     void setUp() {
