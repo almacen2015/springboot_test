@@ -18,4 +18,6 @@ public interface CuentaService {
 
     void transferir(Long numCuentaOrigen, Long numCuentaDestino, BigDecimal monto, Long BancoId);
 
+    void deleteById(Long id);
+
 }

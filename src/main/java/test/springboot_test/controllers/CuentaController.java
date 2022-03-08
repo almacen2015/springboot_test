@@ -39,13 +39,19 @@ public class CuentaController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Cuenta> listar(){
+    public List<Cuenta> listar() {
         return cuentaService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cuenta guardar(@RequestBody Cuenta cuenta){
+    public Cuenta guardar(@RequestBody Cuenta cuenta) {
         return cuentaService.save(cuenta);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        cuentaService.deleteById(id);
     }
 }
